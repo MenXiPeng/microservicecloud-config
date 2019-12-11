@@ -1,0 +1,48 @@
+spring:
+  profile:
+    active:
+      - dev
+---
+server:
+  port: 8201
+spring:
+  profiles: dev
+  datasource:
+      username: root
+      password: root
+      url: jdbc:mysql://127.0.0.1:3306/dept?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true&useSSL=false&zeroDateTimeBehavior=convertToNull
+      # Hikari will use the above plus the following to setup connection poolin
+      type: com.zaxxer.hikari.HikariDataSource
+      hikari:
+        minimum-idle: 10
+        auto-commit: true
+        idle-timeout: 60000
+        pool-name: electricHikariCP
+        max-lifetime: 1800000
+        connection-timeout: 60000
+        leak-detection-threshold: 600000
+        data-source-properties:
+          prepStmtCacheSize: 250
+    application:
+      name: microservicecloud-dept
+server:
+  port: 8001
+  
+ #注册到注册中心
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7002.com:7002/eureka/,http://eureka7001.com:7001/eureka/,http://eureka7003.com:7003/eureka/
+  instance:
+    instance-id: microservicecloud-dept-8001 #注册名称
+    prefer-ip-address: true #显示ip地址提示
+info:
+  app.name: atguigu-microservicecloud
+  company.name: www.atguigu.com
+  build.artifactId: $project.artifactId$ # 没有生效
+  build.version: $project.version$
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
